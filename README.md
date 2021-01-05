@@ -1,2 +1,6 @@
-# mm-data
-https://www.sports-reference.com
+# Madness Data
+College Basketball game stats scraped from https://www.sports-reference.com.
+
+
+
+
