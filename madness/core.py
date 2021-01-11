@@ -79,9 +79,44 @@ class Madness:
             return pd.concat(dfs)
         else: 
             return None
-            
+    
+    @staticmethod
+    def tournament(year):
+        url = f"https://www.sports-reference.com/cbb/postseason/{str(year)}-ncaa.html"
+        response = requests.get(url)
+        if response.status_code != 200:
+            return None
+        else:
+            soup = BeautifulSoup(response.text, "lxml")
+            brackets = soup.find("div", attrs={"id" : "brackets"})
+            regions = brackets.find_all("div", recursive=False)
+            results = []
+            for region in regions:
+                bracket = region.find("div", attrs={"id" : "bracket"})
+                rounds = bracket.find_all("div", attrs={"class" : "round"})
+                for round_ind, rnd in enumerate(rounds):
+                    games = rnd.find_all("div", recursive=False)
+                    for game in games:
+                        game_dict = dict()
+                        teams = game.find_all("div", recursive=False)
+                        for team_ind, team in enumerate(teams):
+                            if len(team.find_all("a")) == 2:
+                                school_link = team.find("a")
+                                game_link = school_link.find_next_sibling()
+                                game_dict[f"team_{team_ind + 1}_code"] = school_link.get("href").split("/")[-2]
+                                game_dict[f"team_{team_ind + 1}_rank"] = team.find("span").text
+                                game_dict[f"team_{team_ind + 1}_score"] = game_link.text
+                        game_dict["round"] = round_ind + 1
+                        game_dict["region"] = region.get("id")
+                        results.append(game_dict)
+            df = pd.DataFrame(results)
+            df["year"] = year
+            df = df.drop_duplicates()
+            df = df.dropna(subset=["team_1_code"]).reset_index(drop=True)
+            return df
+
 if __name__=="__main__":
     #print(Madness.schools())
-    print(Madness.gamelog_all_years("abilene-christian"))
+    print(Madness.tournament(2019))
     
     
