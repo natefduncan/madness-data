@@ -4,9 +4,8 @@ import pandas as pd
 
 if __name__=="__main__":
     #Schools
-    '''
     schools = Madness.schools()
-    schools.to_csv("data/schools.csv")
+    #schools.to_csv("data/schools.csv")
 
     #Gamelogs
     dfs = list()
@@ -14,9 +13,8 @@ if __name__=="__main__":
         df = Madness.gamelog_all_years(school["school_id"])
         if isinstance(df, pd.DataFrame):
             dfs.append(df)
-    df = pd.concat(dfs).to_csv("data/gamelogs.csv")
+    df = pd.concat(dfs).to_csv("data/2021gamelogs.csv")
     '''
-
     #Tournaments
     dfs = list()
     for year in range(1995, 2020):
@@ -24,4 +22,4 @@ if __name__=="__main__":
         if isinstance(df, pd.DataFrame):
             dfs.append(df)
     df = pd.concat(dfs).to_csv("data/tournaments.csv")
-    
+    '''    

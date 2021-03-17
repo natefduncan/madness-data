@@ -38,6 +38,8 @@ class Madness:
         else: 
             soup = BeautifulSoup(response.text, "lxml")
             table = soup.find("table", attrs={"id" : "sgl-basic"})
+            if not table:
+                return None
             body = table.find("tbody")
             rows = body.find_all("tr")
             output = list()
@@ -71,7 +73,7 @@ class Madness:
     @staticmethod
     def gamelog_all_years(school_id):
         dfs = list()
-        for year in range(2011, 2021):
+        for year in range(2021, 2022):
             df = Madness.gamelog(school_id, year)
             if isinstance(df, pd.DataFrame):
                 dfs.append(df)
